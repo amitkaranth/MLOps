@@ -1,4 +1,4 @@
-````markdown
+
 # FastAPI Wine Classification Lab
 
 This project serves a machine learning classification model as a REST API using FastAPI.  
@@ -20,7 +20,7 @@ It is a modified version of the original FastAPI lab and uses the Wine dataset i
 
 ## Project Structure
 
-```text
+
 Fastapi_Lab/
 ├── assets/
 │   ├── batch_predictions.png
@@ -37,7 +37,7 @@ Fastapi_Lab/
 │   └── main.py
 ├── requirements.txt
 └── README.md
-````
+
 
 ---
 
@@ -87,6 +87,48 @@ http://127.0.0.1:8000/docs
   Accepts multiple samples and returns predictions for each.
 
 ---
+
+## Example Predict Input Request
+
+```json
+{
+  "alcohol": 14,
+  "malic_acid": 1.5,
+  "ash": 3.2,
+  "alcalinity_of_ash": 15.6,
+  "magnesium": 127,
+  "total_phenols": 2.5,
+  "flavanoids": 3.2,
+  "nonflavanoid_phenols": 0.2,
+  "proanthocyanins": 2.3,
+  "color_intensity": 5.2,
+  "hue": 1.05,
+  "od280_od315_of_diluted_wines": 3.5,
+  "proline": 1047
+}
+```
+The above example gives an prediction response: 0
+The screenshot of the input/ output is available in the assets/ folder
+
+```json
+{
+  "alcohol": 13.44,
+  "malic_acid": 5.22,
+  "ash": 2.56,
+  "alcalinity_of_ash": 20.6,
+  "magnesium": 92,
+  "total_phenols": 1.8,
+  "flavanoids": 0.62,
+  "nonflavanoid_phenols": 0.52,
+  "proanthocyanins": 1.06,
+  "color_intensity": 7.1,
+  "hue": 0.7,
+  "od280_od315_of_diluted_wines": 1.75,
+  "proline": 747
+}
+```
+The above example gives an prediction response: 2
+The screenshot of the input/ output is available in the assets/ folder
 
 ## Example Batch Request
 

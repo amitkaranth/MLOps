@@ -20,7 +20,7 @@ It is a modified version of the original FastAPI lab and uses the Wine dataset i
 
 ## Project Structure
 
-
+```text
 Fastapi_Lab/
 ├── assets/
 │   ├── batch_predictions.png
@@ -37,7 +37,7 @@ Fastapi_Lab/
 │   └── main.py
 ├── requirements.txt
 └── README.md
-
+```
 
 ---
 

@@ -153,5 +153,3 @@ The screenshot of the input/ output is available in the `assets/` folder
 
 Screenshots of the API and responses are included in the `assets/` folder.
 
-```
-```

@@ -109,7 +109,7 @@ http://127.0.0.1:8000/docs
 ```
 The above example gives an prediction response: 0
 
-The screenshot of the input/ output is available in the assets/ folder
+The screenshot of the input/ output is available in the `assets/` folder
 
 ```json
 {
@@ -130,7 +130,7 @@ The screenshot of the input/ output is available in the assets/ folder
 ```
 The above example gives an prediction response: 2
 
-The screenshot of the input/ output is available in the assets/ folder
+The screenshot of the input/ output is available in the `assets/` folder
 
 ## Example Batch Request
 

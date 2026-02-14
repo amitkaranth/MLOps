@@ -1,6 +1,9 @@
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+import matplotlib.pyplot as plt
+import numpy as np
 from kneed import KneeLocator
 import pickle
 import os
@@ -39,28 +42,46 @@ def data_preprocessing(data_b64: str):
 
 def build_save_model(data_b64: str, filename: str):
     """
-    Builds a KMeans model on the preprocessed data and saves it.
-    Returns the SSE list (JSON-serializable).
+    Builds a KMeans model using optimal k (elbow method),
+    saves it, and returns SSE list.
     """
-    # decode -> bytes -> numpy array
     data_bytes = base64.b64decode(data_b64)
     df = pickle.loads(data_bytes)
 
-    kmeans_kwargs = {"init": "random", "n_init": 10, "max_iter": 300, "random_state": 42}
+    kmeans_kwargs = {
+        "init": "random",
+        "n_init": 10,
+        "max_iter": 300,
+        "random_state": 42
+    }
+
     sse = []
-    for k in range(1, 50):
+    for k in range(1, 11):  # reduced range for stability
         kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
         kmeans.fit(df)
         sse.append(kmeans.inertia_)
 
-    # NOTE: This saves the last-fitted model (k=49), matching your original intent.
+    # Find optimal k
+
+    kl = KneeLocator(range(1, 11), sse, curve="convex", direction="decreasing")
+    optimal_k = kl.elbow if kl.elbow else 3  # fallback safe default
+
+    print(f"Using optimal k = {optimal_k}")
+
+    # Train final model
+    final_model = KMeans(n_clusters=optimal_k, **kmeans_kwargs)
+    final_model.fit(df)
+
+    # Save model
     output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model")
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, filename)
-    with open(output_path, "wb") as f:
-        pickle.dump(kmeans, f)
 
-    return sse  # list is JSON-safe
+    with open(output_path, "wb") as f:
+        pickle.dump(final_model, f)
+
+    return sse
+
 
 
 def load_model_elbow(filename: str, sse: list):
@@ -73,7 +94,9 @@ def load_model_elbow(filename: str, sse: list):
     loaded_model = pickle.load(open(output_path, "rb"))
 
     # elbow for information/logging
-    kl = KneeLocator(range(1, 50), sse, curve="convex", direction="decreasing")
+    k_range = range(1, len(sse) + 1)
+    kl = KneeLocator(k_range, sse, curve="convex", direction="decreasing")
+    
     print(f"Optimal no. of clusters: {kl.elbow}")
 
     # predict on raw test data (matches your original code)
@@ -86,3 +109,42 @@ def load_model_elbow(filename: str, sse: list):
     except Exception:
         # if not numeric, still return a JSON-friendly version
         return pred.item() if hasattr(pred, "item") else pred
+    
+
+def evaluate_model(data_b64: str, filename: str):
+    """
+    Loads model, computes silhouette score,
+    saves cluster distribution and simple scatter plot.
+    """
+    data_bytes = base64.b64decode(data_b64)
+    df = pickle.loads(data_bytes)
+
+    model_path = os.path.join(os.path.dirname(__file__), "../model", filename)
+    model = pickle.load(open(model_path, "rb"))
+
+    labels = model.predict(df)
+
+    score = silhouette_score(df, labels)
+    print(f"Silhouette Score: {score}")
+
+    # Save cluster distribution
+    unique, counts = np.unique(labels, return_counts=True)
+    distribution = pd.DataFrame({
+        "Cluster": unique,
+        "Count": counts
+    })
+
+    output_dir = os.path.join(os.path.dirname(__file__), "../model")
+    distribution.to_csv(os.path.join(output_dir, "cluster_distribution.csv"), index=False)
+
+    # Simple scatter plot (first two features)
+    plt.figure()
+    plt.scatter(df[:, 0], df[:, 1], c=labels)
+    plt.title("Cluster Visualization")
+    plt.xlabel("Feature 1")
+    plt.ylabel("Feature 2")
+    plt.savefig(os.path.join(output_dir, "cluster_plot.png"))
+    plt.close()
+
+    return float(score)
+

@@ -50,6 +50,8 @@ if __name__ == '__main__':
     with open("metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
     print("\nMetrics saved to metrics.json")
+    print("\nMetrics JSON:")
+    print(json.dumps(metrics, indent=2))
 
     # Save the model to a file
     joblib.dump(model, 'wine_model.pkl')

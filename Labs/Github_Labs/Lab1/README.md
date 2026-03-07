@@ -2,8 +2,46 @@
 
 This lab focuses on 5 modules, which includes creating a virtual environment, creating a GitHub repository, creating Python files, creating test files using pytest and unittest, and implementing GitHub Actions.
 
+---
 
+## Submission for Lab 4, due on 14th March, 2026.
 
+## Submitted by Amit Karanth Gurpur
+
+## Modifications in this submission
+
+- **New calculator operations:** Added `fun5(x, y)` (power, `x ** y`) and `fun6(x, y)` (modulo, `x % y`) in `src/calculator.py`, with the same input validation as the existing functions (numeric check; modulo also raises on division by zero).
+- **Tests for new functions:** Both `fun5` and `fun6` are covered in `test/test_pytest.py` and `test/test_unittest.py` with several numeric cases.
+- **Parametrized pytest tests:** `fun1` and `fun3` are now tested via `@pytest.mark.parametrize` in `test_pytest.py` so multiple input/output pairs are covered in one test each.
+- **Invalid-input test:** Added `test_fun1_invalid_input` in pytest that checks a non-numeric argument raises `ValueError` (using `pytest.raises`).
+- **CI workflow updates:** The repo's GitHub Actions workflows for this lab (Pytest and Unittest) were updated to run with `working-directory: Labs/Github_Labs/Lab1` so tests run in the correct folder and imports work in CI.
+- **Lab .gitignore:** Added a `.gitignore` in this folder to ignore the local venv (`lab1_venv/`), Python cache, and pytest report so they are not committed.
+
+---
+
+## How to run (for grading)
+
+All commands below are run from this folder (`Labs/Github_Labs/Lab1`).
+
+1. **Create and activate a virtual environment**
+   ```bash
+   python -m venv lab1_venv
+   source lab1_venv/bin/activate   # On Windows: lab1_venv\Scripts\activate
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run tests**
+   - Pytest: `pytest test/test_pytest.py -v`
+   - Unittest: `python -m unittest test.test_unittest -v`
+
+Both test suites should pass. The same tests run automatically on push to `main` via the GitHub Actions workflows (see the Actions tab in the repo).
+
+## End of modifications explanation
+---
 
 ## Step 1: Creating a Virtual Environment
 

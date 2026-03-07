@@ -1,0 +1,17 @@
+# Virtual environment
+lab1_venv/
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.pytest_cache/
+*.egg-info/
+.eggs/
+
+# JUnit / test artifacts (optional; CI uploads these)
+pytest-report.xml

@@ -8,7 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: Labs/Github_Labs/Lab1
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -19,10 +21,10 @@ jobs:
         python-version: 3.8
 
     - name: Install dependencies
-      run: pip install -r Labs/Github_Labs/Lab1/requirements.txt
+      run: pip install -r requirements.txt
 
     - name: Run unittests
-      run: python -m unittest Labs/Github_Labs/Lab1/test/test_unittest.py
+      run: python -m unittest test.test_unittest
 
 
     - name: Notify on success
